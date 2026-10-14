@@ -39,7 +39,8 @@ const CustomTheme = (mode = "light") => {
       MuiCssBaseline: {
         styleOverrides: {
           // iPadで画面端を引っ張ったときのバウンドを止める
-          body: { overscrollBehavior: "none" }
+          // （ブラウザはhtml側の指定を見るので、htmlにも付ける）
+          "html, body": { overscrollBehavior: "none" }
         }
       }
     }
