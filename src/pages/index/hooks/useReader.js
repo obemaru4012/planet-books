@@ -5,7 +5,19 @@ import "foliate-js/view.js";
 import { getBookFile, updateBook } from "@app/libs/db";
 
 // 画面の左右この割合をタップするとページ送り、中央はメニュー表示
-const TAP_ZONE = 0.3;
+const TAP_ZONE = 0.2;
+
+// 本文の余白（foliate-jsの標準より詰めて、画面を広く使う）
+const LAYOUT = {
+  // 左右の余白（画面幅に対する割合）
+  gap: "0%",
+  // 上下の余白
+  margin: "8px",
+  // 1段の幅・高さの上限。画面がこれより大きいと本文は上下左右の中央に置かれる
+  // （iPad miniの画面 744x1133 より大きくして、miniでは画面いっぱいに表示）
+  "max-inline-size": "900px",
+  "max-block-size": "1200px"
+};
 
 const getReaderCSS = ({ mode, fontSize }) => `
   html {
@@ -74,21 +86,31 @@ const useReader = ({ book, mode, fontSize }) => {
       else if (e.key === "ArrowRight") view.goRight();
     };
 
-    const handleTap = (e, doc) => {
-      if (e.target.closest?.("a[href]")) return;
-      if (doc.defaultView.getSelection()?.toString()) return;
+    // 画面上のX座標でページ送り・メニュー表示を振り分ける
+    const tapAt = (clientX) => {
       if (menuVisibleRef.current) {
         setMenuVisible(false);
         return;
       }
-      // 本文はiframe内なので、画面上の位置に換算する
-      const frame = doc.defaultView.frameElement;
-      const left = frame ? frame.getBoundingClientRect().left : 0;
-      const ratio = (e.clientX + left) / window.innerWidth;
+      const ratio = clientX / window.innerWidth;
       if (ratio < TAP_ZONE) view.goLeft();
       else if (ratio > 1 - TAP_ZONE) view.goRight();
       else setMenuVisible(true);
     };
+
+    // 本文（iframe内）のタップ
+    const handleTap = (e, doc) => {
+      if (e.target.closest?.("a[href]")) return;
+      if (doc.defaultView.getSelection()?.toString()) return;
+      // iframe内の座標なので、画面上の位置に換算する
+      const frame = doc.defaultView.frameElement;
+      const left = frame ? frame.getBoundingClientRect().left : 0;
+      tapAt(e.clientX + left);
+    };
+
+    // 本文の外側（中央寄せしたときの周りの余白）のタップ
+    // iframe内のクリックはここまで届かないので、二重には処理されない
+    const handleOuterTap = (e) => tapAt(e.clientX);
 
     const handleLoad = ({ detail: { doc } }) => {
       doc.addEventListener("keydown", handleKeydown);
@@ -115,9 +137,13 @@ const useReader = ({ book, mode, fontSize }) => {
       if (cancelled) return;
 
       view.addEventListener("load", handleLoad);
+      view.addEventListener("click", handleOuterTap);
       view.addEventListener("relocate", handleRelocate);
       view.renderer.setStyles?.(getReaderCSS(styleRef.current));
       view.renderer.setAttribute("animated", "");
+      for (const [name, value] of Object.entries(LAYOUT)) {
+        view.renderer.setAttribute(name, value);
+      }
 
       setToc(flattenToc(view.book.toc));
       setDir(view.book.dir === "rtl" ? "rtl" : "ltr");

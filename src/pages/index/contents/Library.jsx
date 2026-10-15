@@ -12,6 +12,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import Toolbar from "@mui/material/Toolbar";
@@ -41,7 +42,7 @@ const BookCard = ({ book, onOpen, onDelete }) => {
       <CardActionArea onClick={() => onOpen(book)}>
         <Box
           sx={{
-            aspectRatio: "2 / 3",
+            aspectRatio: "9 / 16",
             bgcolor: "action.hover",
             display: "flex",
             alignItems: "center",
@@ -176,48 +177,72 @@ const Library = ({ state }) => {
         )}
 
         {library.loading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", pt: 8 }}>
-            <CircularProgress />
-          </Box>
-        ) : library.books.length === 0 ? (
-          <Box sx={{ textAlign: "center", px: 2, pt: 10 }}>
-            <MenuBookIcon sx={{ fontSize: 64, color: "text.disabled" }} />
-            <Typography variant='h6' sx={{ mt: 2, color: "text.primary" }}>
-              {"本棚は空です"}
-            </Typography>
-            <Typography
-              variant='body2'
-              sx={{ mt: 1, mb: 3, color: "text.secondary" }}
-            >
-              {"「本を追加」からEPUBファイルを選んでください。"}
-            </Typography>
-            <Button
-              variant='outlined'
-              startIcon={<AddIcon />}
-              disabled={library.importing}
-              onClick={openFilePicker}
-            >
-              {"本を追加"}
-            </Button>
-          </Box>
-        ) : (
-          <Box
+          <Grid
+            container
+            spacing={0}
+            direction='column'
+            alignItems='center'
+            justifyContent='center'
             sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
-              gap: 2,
-              p: 2
+              minHeight: "90vh",
+              bgcolor: "background.default",
+              px: 2,
+              position: "relative"
             }}
           >
+            <CircularProgress />
+          </Grid>
+        ) : library.books.length === 0 ? (
+          <Grid
+            container
+            spacing={0}
+            direction='column'
+            alignItems='center'
+            justifyContent='center'
+            sx={{
+              minHeight: "90vh",
+              bgcolor: "background.default",
+              px: 2,
+              position: "relative"
+            }}
+          >
+            <Box
+              sx={{
+                textAlign: "center"
+              }}
+            >
+              <MenuBookIcon sx={{ fontSize: 64, color: "text.disabled" }} />
+              <Typography variant='h6'>{"本棚は空です"}</Typography>
+              <Typography
+                variant='body2'
+                sx={{ marginTop: 1, marginBottom: 3 }}
+              >
+                {"「本を追加」からEPUBファイルを選んでください。"}
+              </Typography>
+              <Button
+                size={"large"}
+                variant='outlined'
+                startIcon={<AddIcon />}
+                disabled={library.importing}
+                onClick={openFilePicker}
+              >
+                {"本を追加"}
+              </Button>
+            </Box>
+          </Grid>
+        ) : (
+          <Grid container sx={{ padding: 2, spacing: 4 }}>
             {library.books.map((book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                onOpen={state.openBook}
-                onDelete={setDeleteTarget}
-              />
+              <Grid size={{ xs: 3 }}>
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  onOpen={state.openBook}
+                  onDelete={setDeleteTarget}
+                />
+              </Grid>
             ))}
-          </Box>
+          </Grid>
         )}
       </Box>
 
