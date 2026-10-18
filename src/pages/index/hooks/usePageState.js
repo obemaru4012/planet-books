@@ -32,8 +32,15 @@ const usePageState = ({ props }) => {
   const [fontSize, setFontSize] = useState(getInitialFontSize);
   // 開いている本（null なら本棚を表示）
   const [openedBook, setOpenedBook] = useState(null);
+  // 本棚で開いているフォルダ（null なら一番上）
+  // 本を閉じたときに元のフォルダへ戻れるよう、本棚の外で持つ
+  const [openedFolderId, setOpenedFolderId] = useState(null);
 
   const library = useLibrary();
+
+  // 開いているフォルダが削除されたら一番上に戻る
+  const openedFolder =
+    library.folders.find((folder) => folder.id === openedFolderId) ?? null;
 
   useEffect(() => {
     window.localStorage.setItem(COLOR_MODE_KEY, mode);
@@ -61,6 +68,10 @@ const usePageState = ({ props }) => {
     library.reload();
   };
 
+  const openFolder = (folder) => setOpenedFolderId(folder.id);
+
+  const closeFolder = () => setOpenedFolderId(null);
+
   return {
     mode,
     toggleMode,
@@ -69,6 +80,9 @@ const usePageState = ({ props }) => {
     openedBook,
     openBook,
     closeBook,
+    openedFolder,
+    openFolder,
+    closeFolder,
     library
   };
 };

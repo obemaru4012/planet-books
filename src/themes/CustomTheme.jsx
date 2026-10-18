@@ -19,7 +19,7 @@ const CustomTheme = (mode = "light") => {
       values: {
         xs: 0, // これ以上はxtra Small
         sm: 376, // これ以上はSmall
-        md: 800, // これ以上はMedium
+        md: 768, // これ以上はMedium
         lg: 1280, // これ以上はLarge
         xl: 1280
       }

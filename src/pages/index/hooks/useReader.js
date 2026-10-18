@@ -10,9 +10,9 @@ const TAP_ZONE = 0.2;
 // 本文の余白（foliate-jsの標準より詰めて、画面を広く使う）
 const LAYOUT = {
   // 左右の余白（画面幅に対する割合）
-  gap: "0%",
+  gap: "4%",
   // 上下の余白
-  margin: "8px",
+  margin: "1.5%",
   // 1段の幅・高さの上限。画面がこれより大きいと本文は上下左右の中央に置かれる
   // （iPad miniの画面 744x1133 より大きくして、miniでは画面いっぱいに表示）
   "max-inline-size": "900px",

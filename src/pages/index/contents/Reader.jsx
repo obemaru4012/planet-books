@@ -73,16 +73,10 @@ const Reader = ({ state }) => {
       <Box
         sx={{
           position: "fixed",
-          inset: 0,
-          bgcolor: "background.default",
-          pt: "env(safe-area-inset-top)",
-          pb: "env(safe-area-inset-bottom)"
+          inset: 0
         }}
       >
-        <Box
-          ref={reader.containerRef}
-          sx={{ width: "100%", height: "100%", paddingTop: 4 }}
-        />
+        <Box ref={reader.containerRef} sx={{ width: "100%", height: "100%" }} />
 
         {reader.loading && (
           <Box
