@@ -44,20 +44,20 @@ export const listBooks = async () => {
  * 本を追加
  *
  * @param {object} book 本棚用の情報
- * @param {ArrayBuffer} buffer EPUB本体
+ * @param {Blob} file EPUB本体（Fileのまま渡すと、Safariはメモリに展開せずディスクに保存する）
  */
-export const addBook = async (book, buffer) => {
+export const addBook = async (book, file) => {
   const db = await getDB();
   const tx = db.transaction([STORE_BOOKS, STORE_FILES], "readwrite");
   await Promise.all([
     tx.objectStore(STORE_BOOKS).put(book),
-    tx.objectStore(STORE_FILES).put(buffer, book.id),
+    tx.objectStore(STORE_FILES).put(file, book.id),
     tx.done
   ]);
 };
 
 /**
- * EPUB本体を取得
+ * EPUB本体を取得（Blob。古い版で取り込んだ本は ArrayBuffer）
  */
 export const getBookFile = async (id) => {
   const db = await getDB();

@@ -15,6 +15,12 @@ import { readBookMeta } from "@app/libs/bookMeta";
 const createId = () =>
   `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 
+// 取り込み失敗の理由を短く表す（原因の切り分け用）
+const describeError = (e) => {
+  if (e?.name === "QuotaExceededError") return "保存容量が足りません";
+  return [e?.name, e?.message].filter(Boolean).join(": ") || "不明なエラー";
+};
+
 /**
  * 本棚（取り込み・一覧・削除・フォルダ分け）
  */
@@ -73,10 +79,11 @@ const useLibrary = () => {
           folderId,
           ...meta
         };
-        await addBook(book, await file.arrayBuffer());
+        // メモリに読み込まず、ファイルのまま保存する（大きな本でも落ちないように）
+        await addBook(book, file);
       } catch (e) {
         console.error(e);
-        failed.push(file.name);
+        failed.push(`${file.name}（${describeError(e)}）`);
       }
     }
 

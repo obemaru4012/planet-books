@@ -127,9 +127,11 @@ const useReader = ({ book, mode, fontSize }) => {
     };
 
     const open = async () => {
-      const buffer = await getBookFile(book.id);
-      if (!buffer) throw new Error("本のデータが見つかりません。");
-      const file = new File([buffer], book.fileName, {
+      // Blob・ArrayBuffer どちらでも File にできる。Blob ならメモリに展開されず、
+      // foliate-js が必要な部分だけ読む
+      const data = await getBookFile(book.id);
+      if (!data) throw new Error("本のデータが見つかりません。");
+      const file = new File([data], book.fileName, {
         type: "application/epub+zip"
       });
 
