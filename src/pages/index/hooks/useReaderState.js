@@ -10,12 +10,12 @@ const TAP_ZONE = 0.2;
 // 本文の余白（foliate-jsの標準より詰めて、画面を広く使う）
 const LAYOUT = {
   // 左右の余白（画面幅に対する割合）
-  gap: "4%",
+  gap: "5%",
   // 上下の余白
-  margin: "1.5%",
+  margin: "0%",
   // 1段の幅・高さの上限。画面がこれより大きいと本文は上下左右の中央に置かれる
   // （iPad miniの画面 744x1133 より大きくして、miniでは画面いっぱいに表示）
-  "max-inline-size": "900px",
+  "max-inline-size": "800px",
   "max-block-size": "1200px"
 };
 
@@ -51,7 +51,7 @@ const flattenToc = (items, depth = 0) =>
 /**
  * リーダー（EPUBの表示・ページ送り・読書位置の保存）
  */
-const useReader = ({ book, mode, fontSize }) => {
+const useReaderState = ({ book, mode, fontSize }) => {
   const containerRef = useRef(null);
   const viewRef = useRef(null);
   const styleRef = useRef({ mode, fontSize });
@@ -61,7 +61,8 @@ const useReader = ({ book, mode, fontSize }) => {
   const [error, setError] = useState(null);
   const [toc, setToc] = useState([]);
   // ページ送り方向（縦書きの本は "rtl"）
-  const [dir, setDir] = useState("ltr");
+  // const [dir, setDir] = useState("ltr");
+  const [dir, setDir] = useState("rtl");
   const [fraction, setFraction] = useState(book.fraction ?? 0);
   const [currentHref, setCurrentHref] = useState(null);
   const [menuVisible, setMenuVisibleState] = useState(true);
@@ -198,4 +199,4 @@ const useReader = ({ book, mode, fontSize }) => {
   };
 };
 
-export default useReader;
+export default useReaderState;

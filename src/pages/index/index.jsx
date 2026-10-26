@@ -1,14 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 // MUI5
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
-import { useMediaQuery } from "@mui/material";
 // Hooks
-import usePageState from "@app/pages/index/hooks/usePageState";
+import useAppState from "@app/pages/index/hooks/useAppState";
 // Theme
 import CustomTheme from "@app/themes/CustomTheme";
 // Contents
@@ -19,7 +16,7 @@ const Index = () => {
   const props = Object.assign({}, propsContainer.dataset);
 
   // Hooks
-  const state = usePageState({ props: props });
+  const state = useAppState({ props: props });
 
   // テーマ読み込み
   const customTheme = CustomTheme(state.mode);

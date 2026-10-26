@@ -13,7 +13,7 @@ import {
 import { readBookMeta } from "@app/libs/bookMeta";
 
 const createId = () =>
-  `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  `${Date.now()}-${Math.random().toString(24).slice(2, 10)}`;
 
 // 取り込み失敗の理由を短く表す（原因の切り分け用）
 const describeError = (e) => {
@@ -24,7 +24,7 @@ const describeError = (e) => {
 /**
  * 本棚（取り込み・一覧・削除・フォルダ分け）
  */
-const useLibrary = () => {
+const useLibraryState = () => {
   const [books, setBooks] = useState([]);
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,18 +71,18 @@ const useLibrary = () => {
         const book = {
           id: createId(),
           fileName: file.name,
-          size: file.size,
+          fileSize: file.size,
           addedAt: Date.now(),
           lastOpenedAt: null,
-          cfi: null,
-          fraction: 0,
+          cfi: null, // EPUBの進捗位置
+          fraction: 0, // おおまかな位置（%）
+          fontSize: 18, // 本ごとのフォントサイズ
           folderId,
           ...meta
         };
         // メモリに読み込まず、ファイルのまま保存する（大きな本でも落ちないように）
         await addBook(book, file);
       } catch (e) {
-        console.error(e);
         failed.push(`${file.name}（${describeError(e)}）`);
       }
     }
@@ -144,4 +144,4 @@ const useLibrary = () => {
   };
 };
 
-export default useLibrary;
+export default useLibraryState;

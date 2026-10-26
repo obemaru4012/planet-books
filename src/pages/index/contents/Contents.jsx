@@ -1,7 +1,7 @@
 import React from "react";
 // Contents
-import Library from "@app/pages/index/contents/Library";
-import Reader from "@app/pages/index/contents/Reader";
+import Library from "@app/pages/index/contents/library/Library";
+import Reader from "@app/pages/index/contents/reader/Reader";
 
 const Contents = ({ state }) => {
   return (
