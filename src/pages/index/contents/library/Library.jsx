@@ -27,15 +27,12 @@ import FolderIcon from "@mui/icons-material/Folder";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useMediaQuery } from "@mui/material";
-// Theme
-import CustomTheme from "@app/themes/CustomTheme";
 // Contents
 import {
   ConfirmDialog,
   FolderNameDialog,
   MoveBookDialog
-} from "@app/pages/index/contents/LibraryDialogs";
+} from "@app/pages/index/contents/library/LibraryDialogs";
 
 /**
  * 「︙」ボタンとメニュー
@@ -124,14 +121,6 @@ const BookCard = ({ book, state, onOpen, onDelete, onMove }) => {
   const percent = Math.round((book.fraction ?? 0) * 100);
   // [TODO] 表示typeを切り替えできるようにする
   const displayType = "list";
-
-  // テーマ読み込み
-  const customTheme = CustomTheme(state.mode);
-  const isLargeUp = useMediaQuery(customTheme.breakpoints.up("lg"));
-  const isMediumUp = useMediaQuery(customTheme.breakpoints.up("md"));
-  const isLarge = isLargeUp;
-  const isMedium = !isLargeUp && isMediumUp;
-  const isSmall = !isLargeUp && !isMediumUp;
 
   const menuItems = [
     {
@@ -317,9 +306,15 @@ const Library = ({ state }) => {
 
   return (
     <React.Fragment>
+      {/* 本棚は自分の中でスクロールさせる。iPadのホーム画面アプリでは、
+          ページ全体（body）のスクロールが html, body の overscroll-behavior の影響で
+          効かなくなるため */}
       <Box
         sx={{
-          minHeight: "100dvh",
+          height: "100dvh",
+          overflowY: "auto",
+          // 端まで引っ張ったときの跳ね返りは、この領域の中だけで止める
+          overscrollBehavior: "contain",
           bgcolor: "background.default",
           pb: "env(safe-area-inset-bottom)"
         }}
@@ -331,7 +326,7 @@ const Library = ({ state }) => {
           sx={{ pt: "env(safe-area-inset-top)" }}
         >
           <Toolbar>
-            {folder ? (
+            {folder && (
               <IconButton
                 edge='start'
                 onClick={state.closeFolder}
@@ -340,11 +335,9 @@ const Library = ({ state }) => {
               >
                 <ArrowBackIcon />
               </IconButton>
-            ) : (
-              <MenuBookIcon sx={{ mr: 1 }} />
             )}
             <Typography variant='h6' component='h1' noWrap sx={{ flexGrow: 1 }}>
-              {folder ? folder.name : "Planet Books"}
+              {folder ? folder.name : ""}
             </Typography>
             {folder ? (
               <MoreMenu

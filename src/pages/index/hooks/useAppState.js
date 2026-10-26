@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 // Hooks
-import useLibrary from "@app/pages/index/hooks/useLibrary";
+import useLibraryState from "@app/pages/index/hooks/useLibraryState";
 
 const COLOR_MODE_KEY = "color-mode";
 const FONT_SIZE_KEY = "font-size";
 
-export const FONT_SIZE_MIN = 70;
+export const FONT_SIZE_MIN = 20;
 export const FONT_SIZE_MAX = 200;
 export const FONT_SIZE_STEP = 10;
 
+/**
+ * ライト・ダークモード
+ */
 const getInitialMode = () => {
   const saved = window.localStorage.getItem(COLOR_MODE_KEY);
+
+  return "light";
   if (saved === "light" || saved === "dark") return saved;
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
@@ -26,7 +31,8 @@ const getInitialFontSize = () => {
 /**
  * Hooks
  */
-const usePageState = ({ props }) => {
+const useAppState = ({ props }) => {
+  // 画面モード
   const [mode, setMode] = useState(getInitialMode);
   // 本文の文字サイズ（%）
   const [fontSize, setFontSize] = useState(getInitialFontSize);
@@ -36,7 +42,7 @@ const usePageState = ({ props }) => {
   // 本を閉じたときに元のフォルダへ戻れるよう、本棚の外で持つ
   const [openedFolderId, setOpenedFolderId] = useState(null);
 
-  const library = useLibrary();
+  const library = useLibraryState();
 
   // 開いているフォルダが削除されたら一番上に戻る
   const openedFolder =
@@ -87,4 +93,4 @@ const usePageState = ({ props }) => {
   };
 };
 
-export default usePageState;
+export default useAppState;

@@ -37,9 +37,9 @@ npm run preview    # ビルド結果を確認（オフライン動作はこち�
 src/
   libs/db.js                       本棚・EPUB本体の保存（IndexedDB）
   libs/bookMeta.js                 EPUBからタイトル・著者・表紙を取得
-  pages/index/hooks/usePageState.js  画面全体の状態
-  pages/index/hooks/useLibrary.js    本棚（取り込み・削除）
-  pages/index/hooks/useReader.js     リーダー（表示・ページ送り・位置保存）
+  pages/index/hooks/useAppState.js  画面全体の状態
+  pages/index/hooks/useLibraryState.js    本棚（取り込み・削除）
+  pages/index/hooks/useReaderState.js     リーダー（表示・ページ送り・位置保存）
   pages/index/contents/Library.jsx   本棚画面
   pages/index/contents/Reader.jsx    リーダー画面
   public/icons/                    アプリアイコン
